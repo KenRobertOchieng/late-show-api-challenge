@@ -1,0 +1,184 @@
+# Late Show API Challenge
+
+A Flask REST API for a Late Night TV show system, featuring JWT authentication, PostgreSQL, MVC architecture, and full CRUD functionality.
+
+---
+
+## 📂 Project Structure
+
+```
+.
+├── server/
+│   ├── app.py
+│   ├── config.py
+│   ├── seed.py
+│   ├── extensions.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── guest.py
+│   │   ├── episode.py
+│   │   ├── appearance.py
+│   │   └── user.py
+│   ├── controllers/
+│   │   ├── __init__.py
+│   │   ├── guest_controller.py
+│   │   ├── episode_controller.py
+│   │   ├── appearance_controller.py
+│   │   └── auth_controller.py
+├── migrations/
+├── challenge-4-lateshow.postman_collection.json
+├── seed.py            # optional root-level runner
+├── README.md          # this file
+└── requirements.txt
+```
+
+---
+
+## 🔧 Prerequisites
+
+* Python 3.8+ installed
+* PostgreSQL installed and running
+* `venv` or `pipenv` for virtual environments
+* Git and GitHub account
+
+---
+
+## 🛠 Setup & Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/<username>/late-show-api-challenge.git
+   cd late-show-api-challenge
+   ```
+
+2. **Create & activate virtual environment**
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate   # Linux/macOS
+   .\\.venv\\Scripts\\activate  # Windows
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+---
+
+## 🗄️ Database Setup (PostgreSQL)
+
+1. **Create the database**
+
+   ```bash
+   sudo -u postgres psql -c "CREATE DATABASE late_show_db OWNER postgres;"
+   ```
+
+2. **Configure connection**
+
+   In `server/config.py`, set:
+
+   ```python
+   SQLALCHEMY_DATABASE_URI = (
+       "postgresql://postgres:<password>@localhost:5432/late_show_db"
+   )
+   ```
+
+   Replace `<password>` with your Postgres password (URL-encode spaces as `%20`).
+
+---
+
+## 🌐 Environment Variables
+
+Set the following in your shell (or in a `.env` file):
+
+```bash
+export FLASK_APP=server.app
+export FLASK_ENV=development      # enables debug mode
+```
+
+---
+
+## 🔄 Database Migrations & Seeding
+
+1. **Initialize migrations** (only once):
+
+   ```bash
+   flask db init
+   ```
+
+2. **Generate migration script**:
+
+   ```bash
+   flask db migrate -m "Initial schema"
+   ```
+
+3. **Apply migrations**:
+
+   ```bash
+   flask db upgrade
+   ```
+
+4. **Seed sample data**:
+
+   ```bash
+   python seed.py
+   ```
+
+---
+
+## ▶️ Running the App
+
+Start the development server:
+
+```bash
+flask run
+```
+
+Visit `http://127.0.0.1:5000/` to confirm the API is running:
+
+```
+{ 'message': '🎬 Late Show API is running!' }
+```
+
+---
+
+## 🔐 Authentication Flow
+
+1. **Register** (no token required)
+
+   ```http
+   POST /auth/register
+   Content-Type: application/json
+
+   { 'username': 'demo', 'password': 'demo1234' }
+   ```
+
+   **Response**: 201 Created
+
+   ```json
+   { 'message': 'User created successfully' }
+   ```
+
+2. **Login** (no token required)
+
+   ```http
+   POST /auth/login
+   Content-Type: application/json
+
+   { 'username': 'demo', 'password': 'demo1234' }
+   ```
+
+   **Response**: 200 OK
+
+   ```json
+   { 'access_token': '<JWT_TOKEN>' }
+   ```
+
+3. **Use the token** for protected routes:
+
+   ```
+   Authorization: Bearer <JWT_TOKEN>
+   ```
